@@ -1,16 +1,19 @@
-FROM      python:3
+FROM      ubuntu:14.04
 MAINTAINER TechBK <quangbinh.nguyentrong@gmail.com>
 
-RUN pip3 install aiohttp 
-RUN apt-get update && apt-get install -y ncbi-blast+ clustalw 
-RUN mkdir db
+RUN apt-get update && apt-get install -y python3 python3-pip ncbi-blast+
+#RUN apt-get install -y clustalw
+RUN pip3 install aiohttp
+RUN mkdir db/
+RUN mkdir myapp/
 
-COPY myapp/ /
+COPY myapp/ myapp/
 
 COPY refseq_rna.00.tar.gz db/
 
-RUN tar zxvpf db/refseq_rna.00.tar.gz && rm db/refseq_rna.00.tar.gz
+RUN tar zxvpf db/refseq_rna.00.tar.gz -C db/ && rm db/refseq_rna.00.tar.gz
 
-CMD blastn -version && python3 myapp/tuan4.py
+WORKDIR myapp/
+CMD blastn -version && python3 tuan4.py
 
 EXPOSE 8080
